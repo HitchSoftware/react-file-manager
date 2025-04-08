@@ -9,11 +9,22 @@ export const FilesProvider = ({ children, filesData, onError }) => {
     setFiles(filesData);
   }, [filesData]);
 
+  // const getChildren = (file) => {
+  //   if (!file.isDirectory) return [];
+
+  //   return files.filter((child) => child.path === `${file.path}/${child.name}`);
+  // };
+
   const getChildren = (file) => {
     if (!file.isDirectory) return [];
-
-    return files.filter((child) => child.path === `${file.path}/${child.name}`);
+  
+    return files.filter(
+      (child) =>
+        child.path === `${file.path}/${child.name}` &&
+        child.id !== file.id // 💥 prevent self-referencing
+    );
   };
+  
 
   return (
     <FilesContext.Provider value={{ files, setFiles, getChildren, onError }}>
