@@ -24,7 +24,7 @@
 }
 
 .fm-button-secondary {
-  background-color: #f0f0f0;
+  background-color: var(--file-manager-bg-color);
   color: var(--file-manager-text-color);
 
   &:hover {
