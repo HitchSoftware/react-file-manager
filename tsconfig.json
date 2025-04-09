@@ -1,3 +1,6 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: tsconfig.json
+
 {
   "compilerOptions": {
     "target": "ESNext",
