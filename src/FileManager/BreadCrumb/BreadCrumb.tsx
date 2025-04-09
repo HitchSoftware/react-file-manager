@@ -69,21 +69,31 @@ const BreadCrumb = () => {
 
   useEffect(() => {
     if (isBreadCrumbOverflowing()) {
-      const hiddenFolder = folders[1];
-      const hiddenFolderWidth = foldersRef.current[1]?.clientWidth ?? 0;
-      setHiddenFoldersWidth((prev) => [...prev, hiddenFolderWidth]);
-      setHiddenFolders((prev) => [...prev, hiddenFolder]);
-      setFolders((prev) => prev.filter((_, index) => index !== 1));
+      if (folders.length > 1) {
+        const hiddenFolder = folders[1];
+        const hiddenFolderWidth = foldersRef.current[1]?.clientWidth ?? 0;
+        // Only update if not already hidden
+        if (!hiddenFolders.find(f => f.path === hiddenFolder.path)) {
+          setHiddenFoldersWidth(prev => [...prev, hiddenFolderWidth]);
+          setHiddenFolders(prev => [...prev, hiddenFolder]);
+          setFolders(prev => prev.filter((_, index) => index !== 1));
+        }
+      }
     } else if (
       hiddenFolders.length > 0 &&
       checkAvailableSpace() > (hiddenFoldersWidth.at(-1) ?? 0)
     ) {
-      const newFolders = [folders[0], hiddenFolders.at(-1)!, ...folders.slice(1)];
-      setFolders(newFolders);
-      setHiddenFolders((prev) => prev.slice(0, -1));
-      setHiddenFoldersWidth((prev) => prev.slice(0, -1));
+      // Avoid re‑adding if the folders already contain the hidden folder
+      const reinstateFolder = hiddenFolders.at(-1)!;
+      if (!folders.find(f => f.path === reinstateFolder.path)) {
+        const newFolders = [folders[0], reinstateFolder, ...folders.slice(1)];
+        setFolders(newFolders);
+        setHiddenFolders(prev => prev.slice(0, -1));
+        setHiddenFoldersWidth(prev => prev.slice(0, -1));
+      }
     }
   }, [folders, hiddenFolders, hiddenFoldersWidth]);
+
 
   return (
     <div className="bread-crumb-container">
