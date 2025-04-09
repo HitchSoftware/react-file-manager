@@ -60,19 +60,19 @@ const FileManager: React.FC<FileManagerProps> = ({
   fileUploadConfig,
   isLoading,
   onCreateFolder,
-  onFileUploading = () => {},
-  onFileUploaded = () => {},
+  onFileUploading = () => { },
+  onFileUploaded = () => { },
   onCut,
   onCopy,
   onPaste,
   onRename,
   onDownload,
   onDelete = () => null,
-  onLayoutChange = () => {},
+  onLayoutChange = () => { },
   onRefresh,
-  onFileOpen = () => {},
+  onFileOpen = () => { },
   onSelect,
-  onError = () => {},
+  onError = () => { },
   layout = "grid",
   enableFilePreview = true,
   maxFileSize,
@@ -107,7 +107,7 @@ const FileManager: React.FC<FileManagerProps> = ({
                   allowCreateFolder
                   allowUploadFile
                   onLayoutChange={onLayoutChange}
-                  onRefresh={onRefresh ?? (() => {})}
+                  onRefresh={onRefresh ?? (() => { })}
                   triggerAction={triggerAction}
                 />
                 <section
@@ -130,7 +130,7 @@ const FileManager: React.FC<FileManagerProps> = ({
                       onCreateFolder={(name) => onCreateFolder?.(name)}
                       onRename={(file, newName) => onRename?.(file, newName)}
                       onFileOpen={onFileOpen}
-                      onRefresh={onRefresh ?? (() => {})}
+                      onRefresh={onRefresh ?? (() => { })}
                       enableFilePreview={enableFilePreview}
                       triggerAction={triggerAction}
                     />
@@ -149,7 +149,7 @@ const FileManager: React.FC<FileManagerProps> = ({
                     filePreviewComponent
                       ? (file) => createElement(filePreviewComponent, { file })
                       : undefined
-                  }                  
+                  }
                   acceptedFileTypes={acceptedFileTypes}
                   triggerAction={triggerAction}
                 />
@@ -162,4 +162,4 @@ const FileManager: React.FC<FileManagerProps> = ({
   );
 };
 
-export default FileManager;
+export { FileManager };
