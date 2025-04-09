@@ -1,0 +1,20 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\styles\_theme.scss
+
+:root {
+    --file-manager-bg-color: #ffffff;
+    --file-manager-text-color: #000000;
+    --file-manager-primary-color: #6155b4;
+    --file-manager-border-color: #cfcfcf;
+    --file-manager-hover-color: rgba(0, 0, 0, 0.05);
+    --file-manager-font-family: 'Nunito Sans', sans-serif;
+  }
+  
+  [data-theme='dark'] {
+    --file-manager-bg-color: #121212;
+    --file-manager-text-color: #f5f5f5;
+    --file-manager-primary-color: #4f46e5;
+    --file-manager-border-color: #444;
+    --file-manager-hover-color: rgba(255, 255, 255, 0.08);
+  }
+  
