@@ -3,11 +3,12 @@
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import dts from "vite-plugin-dts";
 import path from "path";
 
 export default defineConfig({
   publicDir: false,
-  plugins: [react()],
+  plugins: [react(), dts()],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
