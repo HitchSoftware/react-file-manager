@@ -91,7 +91,7 @@
   }
 
   .item-action {
-    background-color: var(--file-manager-bg-color);
+    background-color: var(--file-manager-bg-color) !important;
     display: flex;
     align-items: center;
     gap: 7px;

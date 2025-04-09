@@ -51,7 +51,8 @@
       &:focus {
         cursor: pointer;
         color: var(--file-manager-text-color);
-        background-color: #dddcdc;
+        // background-color: #dddcdc;
+        background-color: var(--file-manager-bg-color);
         border-radius: 5px;
       }
     }
