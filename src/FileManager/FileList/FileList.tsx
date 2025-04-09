@@ -10,15 +10,8 @@ import "./FileList.scss";
 import { useFileNavigation } from "../../contexts/FileNavigationContext";
 import { useLayout } from "../../contexts/LayoutContext";
 import FileItem from "./FileItem";
-
-interface FileEntity {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  isEditing?: boolean;
-  updatedAt?: string;
-  size?: number;
-}
+import { FileEntity } from "../../types/FileEntity";
+import { TriggerAction } from "../../types/TriggerAction";
 
 interface FileListProps {
   onCreateFolder: (name: string) => void;
@@ -26,12 +19,7 @@ interface FileListProps {
   onFileOpen: (file: FileEntity) => void;
   onRefresh: () => void;
   enableFilePreview: boolean;
-  triggerAction: {
-    isActive: boolean;
-    actionType: string;
-    show: (actionType: string) => void;
-    close: () => void;
-  };
+  triggerAction: TriggerAction;
 }
 
 const FileList: React.FC<FileListProps> = ({
@@ -57,7 +45,7 @@ const FileList: React.FC<FileListProps> = ({
     selectedFileIndexes,
     clickPosition,
     isSelectionCtx,
-  } = useFileList(onRefresh, enableFilePreview, triggerAction);
+  } = useFileList({ onRefresh, enableFilePreview, triggerAction });
 
   const contextMenuRef = useDetectOutsideClick(() => setVisible(false));
 
@@ -86,7 +74,7 @@ const FileList: React.FC<FileListProps> = ({
               selectedFileIndexes={selectedFileIndexes}
               handleContextMenu={handleContextMenu}
               setVisible={setVisible}
-              setLastSelectedFile={setLastSelectedFile}
+              setLastSelectedFile={setLastSelectedFile as (file: FileEntity) => void}
             />
           ))}
         </>
@@ -96,7 +84,7 @@ const FileList: React.FC<FileListProps> = ({
 
       <ContextMenu
         filesViewRef={filesViewRef}
-        contextMenuRef={contextMenuRef.ref}
+        contextMenuRef={contextMenuRef.ref as React.RefObject<HTMLDivElement>}
         menuItems={isSelectionCtx ? selecCtxItems : emptySelecCtxItems}
         visible={visible}
         clickPosition={clickPosition}

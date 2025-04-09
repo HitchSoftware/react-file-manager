@@ -11,13 +11,15 @@ import { getDataSize } from "../../../utils/getDataSize";
 import "./UploadFile.action.scss";
 import { useFileNavigation } from "../../../contexts/FileNavigationContext";
 import { useFiles } from "../../../contexts/FilesContext";
+import { FileEntity } from "../../../types/FileEntity";
+import { mapFileToEntity } from "../../../utils/mapFileToEntity";
 
 interface UploadFileActionProps {
   fileUploadConfig: any;
   maxFileSize?: number;
   acceptedFileTypes?: string;
-  onFileUploading: (file: File, currentFolder: any) => any;
-  onFileUploaded: (file: File, response: any) => void;
+  onFileUploading: (file: FileEntity, currentFolder: any) => any;
+  onFileUploaded: (file: FileEntity, response: any) => void;
 }
 
 const UploadFileAction: React.FC<UploadFileActionProps> = ({
@@ -40,9 +42,9 @@ const UploadFileAction: React.FC<UploadFileActionProps> = ({
     }
   };
 
-  const checkFileError = (file: File): string | undefined => {
+  const checkFileError = (file: FileEntity): string | undefined => {
     if (acceptedFileTypes) {
-      const extError = !acceptedFileTypes.includes(getFileExtension(file.name));
+      const extError = !acceptedFileTypes?.includes(getFileExtension(file.name) ?? "");
       if (extError) return "File type is not allowed.";
     }
 
@@ -51,27 +53,32 @@ const UploadFileAction: React.FC<UploadFileActionProps> = ({
     );
     if (fileExists) return "File already exists.";
 
-    const sizeError = maxFileSize && file.size > maxFileSize;
+    const sizeError = maxFileSize && file.size !== undefined && file.size > maxFileSize;
     if (sizeError) return `Maximum upload size is ${getDataSize(maxFileSize, 0)}.`;
   };
 
   const setSelectedFiles = (selectedFiles: File[]) => {
-    selectedFiles = selectedFiles.filter(
-      (item) =>
-        !files.some((fileData) => fileData.file.name.toLowerCase() === item.name.toLowerCase())
-    );
+    const mappedFiles = selectedFiles
+      .map(mapFileToEntity)
+      .filter(
+        (item) =>
+          !files.some((fileData) => fileData.file.name.toLowerCase() === item.name.toLowerCase())
+      );
 
-    if (selectedFiles.length > 0) {
-      const newFiles = selectedFiles.map((file) => {
+    if (mappedFiles.length > 0) {
+      const newFiles = mappedFiles.map((file) => {
         const appendData = onFileUploading(file, currentFolder);
         const error = checkFileError(file);
-        error && onError?.({ type: "upload", message: error }, file);
+        if (error) {
+          onError?.(new Error(error));
+        }
         return {
           file,
           appendData,
           ...(error && { error }),
         };
       });
+
       setFiles((prev) => [...prev, ...newFiles]);
     }
   };
@@ -156,7 +163,7 @@ const UploadFileAction: React.FC<UploadFileActionProps> = ({
                 setFiles={setFiles}
                 fileUploadConfig={fileUploadConfig}
                 setIsUploading={setIsUploading}
-                onFileUploaded={onFileUploaded}
+                onFileUploaded={(response) => onFileUploaded(fileData.file, response)}
                 handleFileRemove={handleFileRemove}
               />
             ))}

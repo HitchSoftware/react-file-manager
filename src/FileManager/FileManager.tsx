@@ -4,7 +4,7 @@
 import Loader from "../components/Loader/Loader";
 import { useTriggerAction } from "../hooks/useTriggerAction";
 import { useColumnResize } from "../hooks/useColumnResize";
-import { ReactNode } from "react";
+import { createElement, ReactNode } from "react";
 import "./FileManager.scss";
 import { FilesProvider } from "../contexts/FilesContext";
 import { FileNavigationProvider } from "../contexts/FileNavigationContext";
@@ -16,14 +16,7 @@ import NavigationPane from "./NavigationPane/NavigationPane";
 import BreadCrumb from "./BreadCrumb/BreadCrumb";
 import FileList from "./FileList/FileList";
 import Actions from "./Actions/Actions";
-
-export interface FileItem {
-  name: string;
-  isDirectory: boolean;
-  path: string;
-  updatedAt?: string;
-  size?: number;
-}
+import { FileEntity } from "../types/FileEntity";
 
 export interface FileUploadConfig {
   url: string;
@@ -32,22 +25,22 @@ export interface FileUploadConfig {
 }
 
 interface FileManagerProps {
-  files: FileItem[];
+  files: FileEntity[];
   fileUploadConfig?: FileUploadConfig;
   isLoading?: boolean;
-  onCreateFolder?: () => void;
+  onCreateFolder?: (name: string) => void;
   onFileUploading?: () => void;
   onFileUploaded?: () => void;
   onCut?: () => void;
   onCopy?: () => void;
   onPaste?: () => void;
-  onRename?: () => void;
+  onRename?: (file: FileEntity, newName: string) => void;
   onDownload?: () => void;
   onDelete?: () => void;
   onLayoutChange?: (layout: "grid" | "list") => void;
   onRefresh?: () => void;
-  onFileOpen?: (file: FileItem) => void;
-  onSelect?: (selectedFiles: FileItem[]) => void;
+  onFileOpen?: (file: FileEntity) => void;
+  onSelect?: (selectedFiles: FileEntity[]) => void;
   onError?: (error: any) => void;
   layout?: "grid" | "list";
   enableFilePreview?: boolean;
@@ -114,7 +107,7 @@ const FileManager = ({
                   allowCreateFolder
                   allowUploadFile
                   onLayoutChange={onLayoutChange}
-                  onRefresh={onRefresh}
+                  onRefresh={onRefresh ?? (() => {})}
                   triggerAction={triggerAction}
                 />
                 <section
@@ -134,10 +127,10 @@ const FileManager = ({
                   <div className="folders-preview" style={{ width: colSizes.col2 + "%" }}>
                     <BreadCrumb />
                     <FileList
-                      onCreateFolder={onCreateFolder}
-                      onRename={onRename}
+                      onCreateFolder={(name) => onCreateFolder?.(name)}
+                      onRename={(file, newName) => onRename?.(file, newName)}
                       onFileOpen={onFileOpen}
-                      onRefresh={onRefresh}
+                      onRefresh={onRefresh ?? (() => {})}
                       enableFilePreview={enableFilePreview}
                       triggerAction={triggerAction}
                     />
@@ -152,7 +145,11 @@ const FileManager = ({
                   onRefresh={onRefresh}
                   maxFileSize={maxFileSize}
                   filePreviewPath={filePreviewPath}
-                  filePreviewComponent={filePreviewComponent}
+                  filePreviewComponent={
+                    filePreviewComponent
+                      ? (file) => createElement(filePreviewComponent, { file })
+                      : undefined
+                  }                  
                   acceptedFileTypes={acceptedFileTypes}
                   triggerAction={triggerAction}
                 />

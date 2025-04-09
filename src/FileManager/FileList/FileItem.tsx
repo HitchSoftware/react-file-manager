@@ -12,17 +12,11 @@ import { useFileNavigation } from "../../contexts/FileNavigationContext";
 import { useSelection } from "../../contexts/SelectionContext";
 import { useClipBoard } from "../../contexts/ClipboardContext";
 import CreateFolderAction from "../Actions/CreateFolder/CreateFolder.action";
+import { FileEntity } from "../../types/FileEntity";
+import { TriggerAction } from "../../types/TriggerAction";
+import RenameAction from "../Actions/Rename/Rename.action";
 
 const dragIconSize = 50;
-
-interface FileEntity {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  isEditing?: boolean;
-  updatedAt?: string;
-  size?: number;
-}
 
 interface FileItemProps {
   index: number;
@@ -33,9 +27,10 @@ interface FileItemProps {
   onFileOpen: (file: FileEntity) => void;
   filesViewRef: React.RefObject<HTMLDivElement>;
   selectedFileIndexes: number[];
-  triggerAction: { actionType: string; show: (type: string) => void };
+  triggerAction: TriggerAction;
   handleContextMenu: (e: React.MouseEvent, fromFile: boolean) => void;
   setLastSelectedFile: (file: FileEntity) => void;
+  setVisible: (value: boolean) => void;
 }
 
 interface TooltipPosition {
@@ -55,6 +50,7 @@ const FileItem: React.FC<FileItemProps> = ({
   triggerAction,
   handleContextMenu,
   setLastSelectedFile,
+  setVisible
 }) => {
   const [fileSelected, setFileSelected] = useState(false);
   const [lastClickTime, setLastClickTime] = useState(0);
@@ -104,6 +100,7 @@ const FileItem: React.FC<FileItemProps> = ({
 
   const handleFileSelection = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setVisible(false); // 👈 Add this
     if (file.isEditing) return;
 
     handleFileRangeSelection(e.shiftKey, e.ctrlKey);
@@ -115,6 +112,7 @@ const FileItem: React.FC<FileItemProps> = ({
     }
     setLastClickTime(currentTime);
   };
+
 
   const handleOnKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -151,6 +149,7 @@ const FileItem: React.FC<FileItemProps> = ({
     if (dragIconRef.current) {
       e.dataTransfer.setDragImage(dragIconRef.current, 30, 50);
     }
+    setVisible(false);
     e.dataTransfer.effectAllowed = "copy";
     handleCutCopy(true);
   };
@@ -191,9 +190,8 @@ const FileItem: React.FC<FileItemProps> = ({
 
   return (
     <div
-      className={`file-item-container ${dropZoneClass} ${
-        fileSelected || file.isEditing ? "file-selected" : ""
-      } ${isFileMoving ? "file-moving" : ""}`}
+      className={`file-item-container ${dropZoneClass} ${fileSelected || file.isEditing ? "file-selected" : ""
+        } ${isFileMoving ? "file-moving" : ""}`}
       tabIndex={0}
       title={file.name}
       onClick={handleFileSelection}

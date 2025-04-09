@@ -4,13 +4,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { useSelection } from "./SelectionContext";
 import { validateApiCallback } from "../utils/validateApiCallback";
+import { FileEntity } from "../types/FileEntity";
 
-interface FileEntity {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  [key: string]: any;
-}
+
 
 interface ClipboardData {
   files: FileEntity[];

@@ -15,9 +15,10 @@ const LayoutToggler: React.FC<LayoutTogglerProps> = ({
   setShowToggleViewMenu,
   onLayoutChange,
 }) => {
-  const toggleViewRef = useDetectOutsideClick(() => {
+  const toggleViewRef = useDetectOutsideClick<HTMLDivElement>(() => {
     setShowToggleViewMenu(false);
   });
+
 
   const { activeLayout, setActiveLayout } = useLayout();
 

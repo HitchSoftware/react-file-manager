@@ -1,9 +1,6 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src\FileManager\Actions\Rename\Rename.action.tsx
 
-// REPO: @hitchsoftware/react-file-manager
-// FILE: src\FileManager\Actions\Rename\Rename.action.tsx
-
 import React, { useEffect, useRef, useState } from "react";
 import Button from "../../../components/Button/Button";
 import { IoWarningOutline } from "react-icons/io5";
@@ -15,16 +12,13 @@ import ErrorTooltip from "../../../components/ErrorTooltip/ErrorTooltip";
 import { validateApiCallback } from "../../../utils/validateApiCallback";
 import { useFileNavigation } from "../../../contexts/FileNavigationContext";
 import { useLayout } from "../../../contexts/LayoutContext";
+import { FileEntity } from "../../../types/FileEntity";
 
 const maxNameLength = 220;
 
 interface RenameActionProps {
   filesViewRef: React.RefObject<HTMLElement>;
-  file: {
-    key: string;
-    name: string;
-    isDirectory?: boolean;
-  };
+  file: FileEntity;
   onRename: (originalFile: any, newName: string) => void;
   triggerAction: { close: () => void };
 }
@@ -45,10 +39,10 @@ const RenameAction: React.FC<RenameActionProps> = ({
   const { activeLayout } = useLayout();
 
   const warningModalRef = useRef<HTMLDivElement>(null);
-  const outsideClick = useDetectOutsideClick((e: MouseEvent) => {
+  const outsideClick = useDetectOutsideClick((e: MouseEvent | TouchEvent) => {
     if (!warningModalRef.current?.contains(e.target as Node)) {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault?.();
+      e.stopPropagation?.();
     }
   });
 
@@ -137,7 +131,7 @@ const RenameAction: React.FC<RenameActionProps> = ({
       ref?.select();
     } else {
       const fileExtension = getFileExtension(file.name);
-      const fileNameLength = file.name.length - fileExtension.length - 1;
+      const fileNameLength = file.name.length - (fileExtension ? fileExtension.length - 1 : 0);
       ref?.setSelectionRange(0, fileNameLength);
     }
   };
@@ -169,7 +163,7 @@ const RenameAction: React.FC<RenameActionProps> = ({
   return (
     <>
       <NameInput
-        nameInputRef={outsideClick.ref}
+        nameInputRef={outsideClick.ref as React.RefObject<HTMLTextAreaElement>}
         maxLength={maxNameLength}
         value={renameFile}
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {

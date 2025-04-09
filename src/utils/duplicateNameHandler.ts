@@ -1,11 +1,7 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src/utils/duplicateNameHandler.ts
 
-export interface FileEntity {
-  name: string;
-  isDirectory: boolean;
-  [key: string]: any;
-}
+import { FileEntity } from "../types/FileEntity";
 
 export const duplicateNameHandler = (
   originalFileName: string,

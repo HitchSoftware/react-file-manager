@@ -3,17 +3,11 @@
 
 import React from "react";
 import { FaCheck } from "react-icons/fa6";
-
-interface SubMenuItem {
-  title: string;
-  icon?: React.ReactNode;
-  onClick?: () => void;
-  selected?: boolean;
-}
+import { ContextMenuItem } from "../../types/ContextMenuItem";
 
 interface SubMenuProps {
   subMenuRef: React.RefObject<HTMLUListElement>;
-  list: SubMenuItem[];
+  list: ContextMenuItem[];
   position?: "left" | "right";
 }
 

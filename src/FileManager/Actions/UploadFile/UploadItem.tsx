@@ -71,7 +71,13 @@ const UploadItem: React.FC<UploadItemProps> = ({
     );
 
     setUploadFailed(true);
-    onError(error, fileData.file);
+
+    const uploadError = new Error("Upload failed");
+    uploadError.name = "UploadError";
+    onError?.(uploadError);
+    // log separately
+    console.error("File failed to upload:", fileData.file.name, error);
+
   };
 
   const fileUpload = (fileData: FileData) => {
@@ -159,7 +165,7 @@ const UploadItem: React.FC<UploadItemProps> = ({
   return (
     <li>
       <div className="file-icon">
-        {fileIcons[getFileExtension(fileData.file?.name ?? "")] ?? <FaRegFile size={33} />}
+        {fileIcons[getFileExtension(fileData.file?.name ?? "") || ""] ?? <FaRegFile size={33} />}
       </div>
       <div className="file">
         <div className="file-details">
@@ -187,7 +193,7 @@ const UploadItem: React.FC<UploadItemProps> = ({
           percent={uploadProgress}
           isCanceled={isCanceled}
           isCompleted={isUploaded}
-          error={fileData.error}
+          error={typeof fileData.error === "string" ? fileData.error : undefined}
         />
       </div>
     </li>

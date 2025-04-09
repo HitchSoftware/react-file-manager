@@ -43,9 +43,10 @@ const CreateFolderAction: React.FC<CreateFolderActionProps> = ({
   const [errorXPlacement, setErrorXPlacement] = useState<"left" | "right">("right");
   const [errorYPlacement, setErrorYPlacement] = useState<"top" | "bottom">("bottom");
 
-  const outsideClick = useDetectOutsideClick(() => {
+  const outsideClick = useDetectOutsideClick<HTMLTextAreaElement>(() => {
     handleFolderCreating();
   });
+
 
   const { currentFolder, currentPathFiles, setCurrentPathFiles } = useFileNavigation();
   const { activeLayout } = useLayout();
@@ -105,8 +106,11 @@ const CreateFolderAction: React.FC<CreateFolderActionProps> = ({
     if (alreadyExists) {
       setFolderErrorMessage(`This destination already contains a folder named '${newFolderName}'.`);
       setFolderNameError(true);
-      outsideClick.ref.current?.focus();
-      outsideClick.ref.current?.select();
+      const el = outsideClick.ref.current;
+      if (el instanceof HTMLTextAreaElement) {
+        el.focus();
+        el.select();
+      }
       outsideClick.setIsClicked(false);
       return;
     }
@@ -121,8 +125,11 @@ const CreateFolderAction: React.FC<CreateFolderActionProps> = ({
   }
 
   useEffect(() => {
-    outsideClick.ref.current?.focus();
-    outsideClick.ref.current?.select();
+    const el = outsideClick.ref.current;
+    if (el instanceof HTMLTextAreaElement) {
+      el.focus();
+      el.select();
+    }
 
     if (outsideClick.ref.current && filesViewRef.current) {
       const errorMessageWidth = 292 + 8 + 8 + 5;

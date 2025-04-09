@@ -1,12 +1,7 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src/utils/createFolderTree.ts
 
-export interface FileEntity {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  [key: string]: any;
-}
+import { FileEntity } from "../types/FileEntity";
 
 export interface FolderTree extends FileEntity {
   children?: FolderTree[];

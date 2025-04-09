@@ -22,7 +22,7 @@ const BreadCrumb = () => {
   const breadCrumbRef = useRef<HTMLDivElement | null>(null);
   const foldersRef = useRef<(HTMLSpanElement | null)[]>([]);
   const moreBtnRef = useRef<HTMLButtonElement | null>(null);
-  const popoverRef = useDetectOutsideClick(() => {
+  const popoverRef = useDetectOutsideClick<HTMLUListElement>(() => {
     setShowHiddenFolders(false);
   });
 
@@ -64,9 +64,7 @@ const BreadCrumb = () => {
   };
 
   const isBreadCrumbOverflowing = () => {
-    return (
-      breadCrumbRef.current?.scrollWidth ?? 0 > breadCrumbRef.current?.clientWidth ?? 0
-    );
+    return (breadCrumbRef.current?.scrollWidth ?? 0) > getBreadCrumbWidth();
   };
 
   useEffect(() => {

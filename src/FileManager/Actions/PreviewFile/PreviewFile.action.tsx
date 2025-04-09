@@ -1,5 +1,5 @@
 // REPO: @hitchsoftware/react-file-manager
-// FILE: src\FileManager\Actions\PreviewFile\PreviewFile.action.tsx
+// FILE: src/FileManager/Actions/PreviewFile/PreviewFile.action.tsx
 
 import React, { useMemo, useState } from "react";
 import { getFileExtension } from "../../../utils/getFileExtension";
@@ -11,6 +11,7 @@ import { useFileIcons } from "../../../hooks/useFileIcons";
 import { FaRegFileAlt } from "react-icons/fa";
 import "./PreviewFile.action.scss";
 import { useSelection } from "../../../contexts/SelectionContext";
+import { FileEntity } from "../../../types/FileEntity";
 
 const imageExtensions = ["jpg", "jpeg", "png"];
 const videoExtensions = ["mp4", "mov", "avi"];
@@ -19,14 +20,7 @@ const iFrameExtensions = ["txt", "pdf"];
 
 interface FilePreviewActionProps {
   filePreviewPath: string;
-  filePreviewComponent?: (file: FileItem) => React.ReactNode;
-}
-
-interface FileItem {
-  name: string;
-  path: string;
-  size?: number;
-  [key: string]: any;
+  filePreviewComponent?: (file: FileEntity) => React.ReactNode;
 }
 
 const PreviewFileAction: React.FC<FilePreviewActionProps> = ({
@@ -35,11 +29,12 @@ const PreviewFileAction: React.FC<FilePreviewActionProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const { selectedFiles } = useSelection() as { selectedFiles: FileItem[] };
+  const { selectedFiles } = useSelection();
   const fileIcons = useFileIcons(73);
   const file = selectedFiles[0];
-  const extension = getFileExtension(file.name)?.toLowerCase();
-  const filePath = `${filePreviewPath}${file.path}`;
+
+  const extension = getFileExtension(file?.name ?? "")?.toLowerCase();
+  const filePath = file?.path ? `${filePreviewPath}${file.path}` : "";
 
   const customPreview = useMemo(() => {
     return filePreviewComponent?.(file);
@@ -56,7 +51,7 @@ const PreviewFileAction: React.FC<FilePreviewActionProps> = ({
   };
 
   const handleDownload = () => {
-    window.location.href = filePath;
+    if (filePath) window.location.href = filePath;
   };
 
   if (React.isValidElement(customPreview)) {
@@ -72,25 +67,36 @@ const PreviewFileAction: React.FC<FilePreviewActionProps> = ({
 
   return (
     <section className={`file-previewer ${extension === "pdf" ? "pdf-previewer" : ""}`}>
-      {hasError || !supportedExtensions.includes(extension) ? (
+      {hasError || !supportedExtensions.includes(extension ?? "") ? (
         <div className="preview-error">
-          <span className="error-icon">{fileIcons?.[extension as keyof typeof fileIcons] ?? <FaRegFileAlt size={73} />}</span>
+          <span className="error-icon">
+            {extension && fileIcons?.[extension] ? (
+              fileIcons[extension]
+            ) : (
+              <FaRegFileAlt size={73} />
+            )}
+          </span>
+
           <span className="error-msg">Sorry! Preview is not available for this file.</span>
           <div className="file-info">
-            <span className="file-name">{file.name}</span>
-            {file.size && <span>-</span>}
-            <span className="file-size">{getDataSize(file.size)}</span>
+            <span className="file-name">{file?.name}</span>
+            {file?.size && <span>-</span>}
+            {file?.size !== undefined && (
+              <span className="file-size">{getDataSize(file.size)}</span>
+            )}
           </div>
-          <Button onClick={handleDownload} padding="0.45rem .9rem">
-            <div className="download-btn">
-              <MdOutlineFileDownload size={18} />
-              <span>Download</span>
-            </div>
-          </Button>
+          {filePath && (
+            <Button onClick={handleDownload} padding="0.45rem .9rem">
+              <div className="download-btn">
+                <MdOutlineFileDownload size={18} />
+                <span>Download</span>
+              </div>
+            </Button>
+          )}
         </div>
       ) : null}
 
-      {imageExtensions.includes(extension) && (
+      {imageExtensions.includes(extension ?? "") && filePath && (
         <>
           <Loader loading={isLoading} />
           <img
@@ -104,15 +110,15 @@ const PreviewFileAction: React.FC<FilePreviewActionProps> = ({
         </>
       )}
 
-      {videoExtensions.includes(extension) && (
+      {videoExtensions.includes(extension ?? "") && filePath && (
         <video src={filePath} className="video-preview" controls autoPlay />
       )}
 
-      {audioExtensions.includes(extension) && (
+      {audioExtensions.includes(extension ?? "") && filePath && (
         <audio src={filePath} controls autoPlay className="audio-preview" />
       )}
 
-      {iFrameExtensions.includes(extension) && (
+      {iFrameExtensions.includes(extension ?? "") && filePath && (
         <iframe
           src={filePath}
           onLoad={handleImageLoad}

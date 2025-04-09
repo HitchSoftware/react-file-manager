@@ -2,13 +2,7 @@
 // FILE: src/hooks/useTriggerAction.ts
 
 import { useState } from "react";
-
-export type TriggerAction = {
-  isActive: boolean;
-  actionType: string | null;
-  show: (type: string) => void;
-  close: () => void;
-};
+import { TriggerAction } from "../types/TriggerAction";
 
 export const useTriggerAction = (): TriggerAction => {
   const [isActive, setIsActive] = useState<boolean>(false);

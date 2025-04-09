@@ -5,28 +5,38 @@ import React, { useEffect, useState } from "react";
 import FolderTree from "./FolderTree";
 import { getParentPath } from "../../utils/getParentPath";
 import { useFiles } from "../../contexts/FilesContext";
+import { FileEntity } from "../../types/FileEntity";
 import "./NavigationPane.scss";
+import { FolderNode } from "../../types/FolderNode";
 
-const NavigationPane = ({ onFileOpen }) => {
-  const [foldersTree, setFoldersTree] = useState([]);
+export interface NavigationPaneProps {
+  onFileOpen: (file: FileEntity) => void;
+}
+
+
+
+const NavigationPane: React.FC<NavigationPaneProps> = ({ onFileOpen }) => {
+  const [foldersTree, setFoldersTree] = useState<FolderNode[]>([]);
   const { files } = useFiles();
 
-  const createChildRecursive = (path, foldersStruct) => {
-    if (!foldersStruct[path]) return []; // No children for this path (folder)
-
-    return foldersStruct[path]?.map((folder) => {
-      return {
-        ...folder,
-        subDirectories: createChildRecursive(folder.path, foldersStruct),
-      };
-    });
+  const createChildRecursive = (
+    path: string,
+    foldersStruct: Record<string, FileEntity[]>
+  ): FolderNode[] => {
+    if (!foldersStruct[path]) return [];
+  
+    return foldersStruct[path].map((folder): FolderNode => ({
+      ...folder,
+      subDirectories: createChildRecursive(folder.path, foldersStruct),
+    }));
   };
+  
 
   useEffect(() => {
     if (Array.isArray(files)) {
       const folders = files.filter((file) => file.isDirectory);
       // Grouping folders by parent path
-      const foldersStruct = Object.groupBy(folders, ({ path }) => getParentPath(path));
+      const foldersStruct = Object.groupBy(folders, ({ path }) => getParentPath(path)) as Record<string, FileEntity[]>;
       setFoldersTree(() => {
         const rootPath = "";
         return createChildRecursive(rootPath, foldersStruct);
@@ -38,7 +48,7 @@ const NavigationPane = ({ onFileOpen }) => {
     <div className="sb-folders-list">
       {foldersTree?.length > 0 ? (
         <>
-          {foldersTree?.map((folder, index) => {
+          {foldersTree?.map((folder: FolderNode, index) => {
             return <FolderTree key={index} folder={folder} onFileOpen={onFileOpen} />;
           })}
         </>

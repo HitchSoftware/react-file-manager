@@ -8,6 +8,8 @@ import { useSelection } from "../../contexts/SelectionContext";
 import UploadFileAction from "./UploadFile/UploadFile.action";
 import DeleteAction from "./Delete/Delete.action";
 import PreviewFileAction from "./PreviewFile/PreviewFile.action";
+import { TriggerAction } from "../../types/TriggerAction";
+import { FileEntity } from "../../types/FileEntity";
 
 interface FileUploadConfig {
   url?: string;
@@ -16,21 +18,15 @@ interface FileUploadConfig {
   handler?: (event: React.ChangeEvent<HTMLInputElement>, filePath: string) => Promise<void>;
 }
 
-interface TriggerAction {
-  isActive: boolean;
-  actionType: keyof typeof actionTypes | string;
-  close: () => void;
-}
-
 interface ActionsProps {
   fileUploadConfig?: FileUploadConfig;
-  onFileUploading?: () => void;
-  onFileUploaded?: (res: any) => void;
-  onDelete?: (fileId: string) => void;
+  onFileUploading?: (file: FileEntity, currentFolder: any) => any;
+  onFileUploaded?: (file: FileEntity, response: any) => void;
+  onDelete?: (files: FileEntity[]) => void;
   onRefresh?: () => void;
   maxFileSize?: number;
   filePreviewPath?: string;
-  filePreviewComponent?: React.FC<{ file: any }>;
+  filePreviewComponent?: (file: FileEntity) => React.ReactNode;
   acceptedFileTypes?: string;
   triggerAction: TriggerAction;
 }
@@ -43,12 +39,12 @@ interface ActionType {
 
 const Actions: React.FC<ActionsProps> = ({
   fileUploadConfig,
-  onFileUploading,
-  onFileUploaded,
-  onDelete,
-  onRefresh,
+  onFileUploading = () => {},
+  onFileUploaded = () => {},
+  onDelete = () => {},
+  onRefresh = () => {},
   maxFileSize,
-  filePreviewPath,
+  filePreviewPath = "",
   filePreviewComponent,
   acceptedFileTypes,
   triggerAction,
@@ -74,7 +70,9 @@ const Actions: React.FC<ActionsProps> = ({
     },
     delete: {
       title: "Delete",
-      component: <DeleteAction triggerAction={triggerAction} onDelete={onDelete} />,
+      component: (
+        <DeleteAction triggerAction={triggerAction} onDelete={onDelete} />
+      ),
       width: "25%",
     },
     previewFile: {
@@ -90,12 +88,13 @@ const Actions: React.FC<ActionsProps> = ({
   };
 
   useEffect(() => {
-    if (triggerAction.isActive) {
-      const actionType = triggerAction.actionType;
-      const baseAction = actionTypes[actionType];
+    if (triggerAction.isActive && triggerAction.actionType) {
+      const baseAction = actionTypes[triggerAction.actionType];
       if (baseAction) {
         const dynamicTitle =
-          actionType === "previewFile" ? selectedFiles?.name ?? "Preview" : baseAction.title;
+          triggerAction.actionType === "previewFile"
+            ? selectedFiles?.[0]?.name ?? "Preview"
+            : baseAction.title;
 
         setActiveAction({
           ...baseAction,
@@ -105,7 +104,7 @@ const Actions: React.FC<ActionsProps> = ({
     } else {
       setActiveAction(null);
     }
-  }, [triggerAction.isActive, triggerAction.actionType, selectedFiles?.name]);
+  }, [triggerAction.isActive, triggerAction.actionType, selectedFiles]);
 
   if (activeAction) {
     return (

@@ -44,8 +44,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const { activeLayout } = useLayout();
 
   function handleFilePasting() {
-    handlePasting(currentFolder);
+    if (currentFolder) {
+      handlePasting(currentFolder);
+    }
   }
+
 
   const handleDownloadItems = () => {
     handleDownload();
@@ -102,7 +105,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
               <BsCopy strokeWidth={0.1} size={17} />
               <span>Copy</span>
             </button>
-            {clipBoard?.files?.length > 0 && (
+            {clipBoard?.files && clipBoard.files.length > 0 && (
               <button className="item-action file-action" onClick={handleFilePasting}>
                 <FaRegPaste size={18} />
                 <span>Paste</span>
@@ -114,7 +117,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                 <span>Rename</span>
               </button>
             )}
-            {!selectedFiles.isDirectory && (
+            {selectedFiles.every((f) => !f.isDirectory) && (
               <button className="item-action file-action" onClick={handleDownloadItems}>
                 <MdOutlineFileDownload size={19} />
                 <span>Download</span>

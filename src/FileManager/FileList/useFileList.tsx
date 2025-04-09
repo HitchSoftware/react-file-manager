@@ -14,15 +14,13 @@ import { useClipBoard } from "../../contexts/ClipboardContext";
 import { useSelection } from "../../contexts/SelectionContext";
 import { useFileNavigation } from "../../contexts/FileNavigationContext";
 import { useLayout } from "../../contexts/LayoutContext";
+import { FileEntity } from "../../types/FileEntity";
+import { TriggerAction } from "../../types/TriggerAction";
 
 interface UseFileListProps {
   onRefresh: () => void;
   enableFilePreview: boolean;
-  triggerAction: {
-    isActive: boolean;
-    actionType: string;
-    show: (actionType: string) => void;
-  };
+  triggerAction: TriggerAction;
 }
 
 const useFileList = ({ onRefresh, enableFilePreview, triggerAction }: UseFileListProps) => {
@@ -30,7 +28,7 @@ const useFileList = ({ onRefresh, enableFilePreview, triggerAction }: UseFileLis
   const [visible, setVisible] = useState<boolean>(false);
   const [isSelectionCtx, setIsSelectionCtx] = useState<boolean>(false);
   const [clickPosition, setClickPosition] = useState({ clickX: 0, clickY: 0 });
-  const [lastSelectedFile, setLastSelectedFile] = useState<any>(null); // ideally typed
+  const [lastSelectedFile, setLastSelectedFile] = useState<FileEntity | null>(null);
 
   const { clipBoard, setClipBoard, handleCutCopy, handlePasting } = useClipBoard();
   const { selectedFiles, setSelectedFiles, handleDownload } = useSelection();
@@ -92,7 +90,7 @@ const useFileList = ({ onRefresh, enableFilePreview, triggerAction }: UseFileLis
   };
 
   const handleselectAllFiles = () => {
-    setSelectedFiles(currentPathFiles);
+    setSelectedFiles([...currentPathFiles] as FileEntity[]);
     setVisible(false);
   };
 
@@ -200,6 +198,7 @@ const useFileList = ({ onRefresh, enableFilePreview, triggerAction }: UseFileLis
         path: currentPath,
         isEditing: true,
         key: new Date().valueOf(),
+        id: `tmp-${Date.now()}`,
       },
     ]);
   };

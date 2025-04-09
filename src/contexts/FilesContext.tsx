@@ -8,15 +8,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-
-// Define FileEntity type
-export interface FileEntity {
-  id: string;
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  [key: string]: any;
-}
+import { FileEntity } from "../types/FileEntity";
 
 interface FilesContextValue {
   files: FileEntity[];

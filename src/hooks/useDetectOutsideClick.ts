@@ -1,18 +1,18 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src/hooks/useDetectOutsideClick.ts
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, MutableRefObject } from "react";
 
-type OutsideClickHandler = (
+type OutsideClickHandler<T extends HTMLElement> = (
   event: MouseEvent | TouchEvent,
-  ref: React.RefObject<HTMLElement>
+  ref: React.RefObject<T>
 ) => void;
 
-export const useDetectOutsideClick = (
-  handleOutsideClick: OutsideClickHandler = () => {}
-) => {
+export function useDetectOutsideClick<T extends HTMLElement = HTMLElement>(
+  handleOutsideClick: OutsideClickHandler<T> = () => {}
+) {
   const [isClicked, setIsClicked] = useState(false);
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<T | null>(null);
 
   const handleClick = (event: MouseEvent | TouchEvent) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -33,4 +33,4 @@ export const useDetectOutsideClick = (
   }, []);
 
   return { ref, isClicked, setIsClicked };
-};
+}

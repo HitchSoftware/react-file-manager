@@ -6,16 +6,12 @@ import Collapse from "../../components/Collapse/Collapse";
 import { FaRegFolder, FaRegFolderOpen } from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useFileNavigation } from "../../contexts/FileNavigationContext";
+import { FolderNode } from "../../types/FolderNode";
 
-interface Folder {
-  name: string;
-  path: string;
-  subDirectories: Folder[];
-}
 
 interface FolderTreeProps {
-  folder: Folder;
-  onFileOpen: (folder: Folder) => void;
+  folder: FolderNode;
+  onFileOpen: (folder: FolderNode) => void;
 }
 
 const FolderTree: React.FC<FolderTreeProps> = ({ folder, onFileOpen }) => {
@@ -45,7 +41,7 @@ const FolderTree: React.FC<FolderTreeProps> = ({ folder, onFileOpen }) => {
     }
   }, [currentPath, folder.path]);
 
-  if (folder.subDirectories.length > 0) {
+  if (folder?.subDirectories?.length ?? 0 > 0) {
     return (
       <>
         <div
@@ -71,7 +67,7 @@ const FolderTree: React.FC<FolderTreeProps> = ({ folder, onFileOpen }) => {
         </div>
         <Collapse open={isOpen}>
           <div className="folder-collapsible">
-            {folder.subDirectories.map((item: Folder, index: number) => (
+            {folder?.subDirectories?.map((item: FolderNode, index: number) => (
               <FolderTree key={index} folder={item} onFileOpen={onFileOpen} />
             ))}
           </div>

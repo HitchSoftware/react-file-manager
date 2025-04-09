@@ -1,20 +1,15 @@
 // REPO: @hitchsoftware/react-file-manager
-// FILE: src\FileManager\Actions\Delete\Delete.action.tsx
+// FILE: src/FileManager/Actions/Delete/Delete.action.tsx
 
 import React, { useEffect, useState } from "react";
 import Button from "../../../components/Button/Button";
 import "./Delete.action.scss";
 import { useSelection } from "../../../contexts/SelectionContext";
-
-interface FileEntity {
-  name: string;
-  [key: string]: any;
-}
+import { FileEntity } from "../../../types/FileEntity";
+import { TriggerAction } from "../../../types/TriggerAction";
 
 interface DeleteActionProps {
-  triggerAction: {
-    close: () => void;
-  };
+  triggerAction: TriggerAction;
   onDelete: (files: FileEntity[]) => void;
 }
 
@@ -31,7 +26,7 @@ const DeleteAction: React.FC<DeleteActionProps> = ({ triggerAction, onDelete }) 
   }, [selectedFiles]);
 
   const handleDeleting = () => {
-    onDelete(selectedFiles);
+    onDelete?.(selectedFiles);
     setSelectedFiles([]);
     triggerAction.close();
   };
@@ -40,7 +35,7 @@ const DeleteAction: React.FC<DeleteActionProps> = ({ triggerAction, onDelete }) 
     <div className="file-delete-confirm">
       <p className="file-delete-confirm-text">{deleteMsg}</p>
       <div className="file-delete-confirm-actions">
-        <Button type="secondary" onClick={() => triggerAction.close()}>
+        <Button type="secondary" onClick={triggerAction.close}>
           Cancel
         </Button>
         <Button type="danger" onClick={handleDeleting}>

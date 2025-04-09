@@ -1,15 +1,12 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src/utils/sortFiles.ts
 
-interface FileItem {
-  name: string;
-  isDirectory: boolean;
-}
+import { FileEntity } from "../types/FileEntity";
 
-const sortAscending = (files: FileItem[]): FileItem[] =>
-  files.sort((a: FileItem, b: FileItem) => a.name.localeCompare(b.name));
+const sortAscending = (files: FileEntity[]): FileEntity[] =>
+  files.sort((a: FileEntity, b: FileEntity) => a.name.localeCompare(b.name));
 
-const sortFiles = (items: FileItem[]): FileItem[] => {
+const sortFiles = (items: FileEntity[]): FileEntity[] => {
   const folders = items.filter((file) => file.isDirectory);
   const files = items.filter((file) => !file.isDirectory);
   const sortedFolders = sortAscending(folders);

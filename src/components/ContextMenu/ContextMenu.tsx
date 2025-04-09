@@ -5,16 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import SubMenu from "./SubMenu";
 import "./ContextMenu.scss";
-
-interface ContextMenuItem {
-  title: string;
-  icon?: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
-  children?: ContextMenuItem[];
-  divider?: boolean;
-  hidden?: boolean;
-}
+import { ContextMenuItem } from "../../types/ContextMenuItem";
 
 interface ContextMenuProps {
   filesViewRef: React.RefObject<HTMLElement>;
@@ -36,7 +27,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   const [activeSubMenuIndex, setActiveSubMenuIndex] = useState<number | null>(null);
   const [subMenuPosition, setSubMenuPosition] = useState<"left" | "right">("right");
 
-  const subMenuRef = useRef<HTMLDivElement | null>(null);
+  const subMenuRef = useRef<HTMLUListElement | null>(null);
 
   const contextMenuPosition = () => {
     const { clickX, clickY } = clickPosition;
@@ -124,7 +115,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
                         {activeSubMenu && (
                           <SubMenu
                             subMenuRef={subMenuRef}
-                            list={item.children}
+                            list={item.children ?? []}
                             position={subMenuPosition}
                           />
                         )}

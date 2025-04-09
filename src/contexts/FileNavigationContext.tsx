@@ -11,14 +11,7 @@ import React, {
 } from "react";
 import { useFiles } from "./FilesContext";
 import sortFiles from "../utils/sortFiles";
-
-// Define a shared FileEntity type
-interface FileEntity {
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  [key: string]: any;
-}
+import { FileEntity } from "../types/FileEntity";
 
 interface FileNavigationContextValue {
   currentPath: string;

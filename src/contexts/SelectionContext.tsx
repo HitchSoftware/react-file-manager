@@ -11,15 +11,7 @@ import React, {
   SetStateAction,
 } from "react";
 import { validateApiCallback } from "../utils/validateApiCallback";
-
-// Shared type
-export interface FileEntity {
-  id: string;
-  name: string;
-  path: string;
-  isDirectory: boolean;
-  [key: string]: any;
-}
+import { FileEntity } from "../types/FileEntity";
 
 interface SelectionContextValue {
   selectedFiles: FileEntity[];
