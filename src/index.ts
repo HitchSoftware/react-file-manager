@@ -6,4 +6,5 @@ import { applyAutoTheme } from "./styles/initTheme";
 applyAutoTheme();
 
 export { default as FileManager } from "./FileManager/FileManager";
-
+export type { FileManagerProps } from "./FileManager/FileManager";
+export type { FileEntity } from "./types/FileEntity";

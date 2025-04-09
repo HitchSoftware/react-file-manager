@@ -24,7 +24,7 @@ export interface FileUploadConfig {
   method?: "POST" | "PUT";
 }
 
-interface FileManagerProps {
+export interface FileManagerProps {
   files: FileEntity[];
   fileUploadConfig?: FileUploadConfig;
   isLoading?: boolean;
@@ -55,7 +55,7 @@ interface FileManagerProps {
   fontFamily?: string;
 }
 
-const FileManager = ({
+const FileManager: React.FC<FileManagerProps> = ({
   files,
   fileUploadConfig,
   isLoading,
