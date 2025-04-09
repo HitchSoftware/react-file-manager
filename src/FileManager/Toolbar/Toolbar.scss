@@ -59,6 +59,7 @@
       top: 105%;
       right: 22%;
       background-color: var(--file-manager-bg-color);
+      color: var(--file-manager-text-color) !important;
       margin: 0;
       border: 1px solid #c4c4c4;
       border-radius: 5px;
@@ -92,6 +93,7 @@
 
   .item-action {
     background-color: var(--file-manager-bg-color) !important;
+    color: var(--file-manager-text-color) !important;
     display: flex;
     align-items: center;
     gap: 7px;
