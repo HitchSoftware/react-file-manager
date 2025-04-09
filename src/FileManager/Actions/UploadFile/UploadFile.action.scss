@@ -1,6 +1,7 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src\FileManager\Actions\UploadFile\UploadFile.action.scss
 
+@use "../../../styles/theme";
 @use "../../../styles/variables";
 
 .fm-upload-file {
@@ -122,8 +123,8 @@
 
                             &:hover {
                                 cursor: pointer;
-                                background-color: rgba(0, 0, 0, 0.07);
-                                color: var(--file-manager-primary-color);
+                                background-color: var(--file-manager-hover-color);
+                                color: var(--file-manager-text-color);
                             }
                         }
 
@@ -135,7 +136,7 @@
                         }
 
                         .upload-success {
-                            color: var(--file-manager-primary-color);
+                            color: var(--file-manager-text-color);
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src\FileManager\BreadCrumb\BreadCrumb.scss
 
+@use "../../styles/theme";
 @use "../../styles/variables";
 
 .bread-crumb-container {
@@ -33,7 +34,7 @@
 
       &:hover {
         cursor: pointer;
-        color: var(--file-manager-primary-color);
+        color: var(--file-manager-text-color);
       }
     }
 
@@ -49,7 +50,7 @@
       &:hover,
       &:focus {
         cursor: pointer;
-        color: var(--file-manager-primary-color);
+        color: var(--file-manager-text-color);
         background-color: #dddcdc;
         border-radius: 5px;
       }
@@ -63,7 +64,7 @@
   margin: 0;
   z-index: 2;
   background-color: rgb(99, 99, 99);
-  color: white;
+  color: var(--file-manager-text-color);
   padding: 4px;
   border-radius: 5px;
   font-size: .9em;

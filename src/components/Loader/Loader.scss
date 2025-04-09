@@ -1,3 +1,8 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Loader\Loader.scss
+
+@use "../../styles/theme";
+
 .loader-container {
   position: absolute;
   display: flex;
@@ -5,13 +10,13 @@
   align-items: center;
   height: -webkit-fill-available;
   width: -webkit-fill-available;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--file-manager-hover-color);
   z-index: 1000;
 }
 
 .spinner {
   font-size: 3rem;
-  color: white;
+  color: var(--file-manager-text-color);
   animation: spin 1s linear infinite;
 }
 
@@ -33,6 +38,6 @@
 
   .spinner {
     font-size: .9rem;
-    color: black;
+    color: var(--file-manager-text-color);
   }
 }

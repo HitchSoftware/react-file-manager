@@ -1,6 +1,8 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src\FileManager\Actions\Delete\Delete.action.scss
 
+@use "../../../styles/theme";
+
 .file-delete-confirm {
     .file-delete-confirm-text {
         border-bottom: 1px solid #dddddd;

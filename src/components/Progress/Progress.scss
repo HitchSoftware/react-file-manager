@@ -1,3 +1,8 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Progress\Progress.scss
+
+@use "../../styles/theme";
+
 .fm-progress {
   display: flex;
   flex-direction: column;
@@ -11,7 +16,7 @@
 
     .fm-progress-bar-fill {
       height: 100%;
-      background-color: var(--file-manager-primary-color);
+      background-color: var(--file-manager-bg-color);
       border-radius: 5px;
       max-width: 100%;
     }

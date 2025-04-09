@@ -1,3 +1,8 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Progress\Progress.scss
+
+@use "../../styles/theme";
+
 .rename-file {
     position: relative;
     min-width: 69%;

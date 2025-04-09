@@ -1,6 +1,7 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src\FileManager\NavigationPane\NavigationPane.scss
 
+@use "../styles/theme";
 @use "../../styles/variables";
 
 .sb-folders-list {
@@ -22,7 +23,7 @@
 
     &:hover {
       cursor: pointer;
-      background-color: variables.$item-hover-color;
+      background-color: var(--file-manager-hover-color);
     }
 
     .non-expanable {
@@ -58,7 +59,7 @@
 
   .active-list-item {
     background-color: var(--file-manager-primary-color);
-    color: white;
+    color: var(--file-manager-text-color);
 
     &:hover {
       cursor: pointer;

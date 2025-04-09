@@ -1,3 +1,7 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Modal\Modal.scss
+
+@use "../../styles/theme";
 @use "../../styles/variables";
 
 .fm-modal-header {
@@ -10,7 +14,7 @@
   .fm-modal-heading {
     margin: 0;
     font-weight: bold;
-    color: black;
+    color: var(--file-manager-text-color);
   }
 }
 

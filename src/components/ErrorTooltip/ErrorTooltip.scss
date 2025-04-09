@@ -1,3 +1,8 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Loader\Loader.scss
+
+@use "../../styles/theme";
+
 .error-tooltip {
     position: absolute;
     z-index: 1;

@@ -1,3 +1,8 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Loader\Loader.scss
+
+@use "../../styles/theme";
+
 .fm-button {
   border-radius: 5px;
   font-weight: 600;
@@ -9,8 +14,8 @@
 }
 
 .fm-button-primary {
-  background-color: var(--file-manager-primary-color);
-  color: white;
+  background-color: var(--file-manager-bg-color);
+  color: var(--file-manager-text-color);
 
   &:hover {
     background-image: linear-gradient(rgba(0, 0, 0, 0.2),
@@ -20,7 +25,7 @@
 
 .fm-button-secondary {
   background-color: #f0f0f0;
-  color: black;
+  color: var(--file-manager-text-color);
 
   &:hover {
     background-image: linear-gradient(rgba(0, 0, 0, 0.1),
@@ -30,7 +35,7 @@
 
 .fm-button-danger {
   background-color: #f44336;
-  color: white;
+  color: var(--file-manager-text-color);
 
   &:hover {
     background-image: linear-gradient(rgba(0, 0, 0, 0.2),

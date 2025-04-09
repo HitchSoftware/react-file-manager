@@ -1,6 +1,8 @@
 // REPO: @hitchsoftware/react-file-manager
 // FILE: src\FileManager\Actions\PreviewFile\PreviewFile.action.scss
 
+@use "../../../styles/theme";
+
 .file-previewer {
     padding: .8em;
     height: 40dvh;

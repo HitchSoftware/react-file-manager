@@ -1,5 +1,10 @@
+// REPO: @hitchsoftware/react-file-manager
+// FILE: src\components\Loader\Loader.scss
+
+@use "../../styles/theme";
+
 .fm-checkbox {
-    accent-color: white;
+    accent-color: var(--file-manager-text-color);
 
     &:disabled {
         cursor: default !important;
