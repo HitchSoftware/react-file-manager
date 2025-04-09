@@ -4,6 +4,7 @@
   "version": "0.0.9",
   "type": "module",
   "module": "dist/react-file-manager.es.js",
+  "types": "dist/index.d.ts", 
   "files": [
     "dist/",
     "README.md",
@@ -26,6 +27,7 @@
     "react-icons": "^5.4.0"
   },
   "devDependencies": {
+    "@types/node": "^22.14.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
@@ -37,6 +39,7 @@
     "react-dom": "^18.3.1",
     "sass": "^1.77.6",
     "semantic-release": "^24.1.0",
+    "typescript": "^5.8.3",
     "vite": "^5.4.6"
   },
   "peerDependencies": {
