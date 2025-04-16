@@ -135,11 +135,37 @@ const UploadItem: React.FC<UploadItemProps> = ({
   };
 
   useEffect(() => {
-    if (!xhrRef.current) {
+    if (xhrRef.current || fileData.removed) return; // prevent double firing or if already aborted
+
+    if (fileUploadConfig?.handler) {
+      // Use custom upload handler
+      setIsUploading((prev) => ({ ...prev, [index]: true }));
+
+      fileUploadConfig.handler(fileData)
+        .then((response) => {
+          setIsUploading((prev) => ({ ...prev, [index]: false }));
+          setIsUploaded(true);
+          onFileUploaded(response);
+        })
+        .catch((error) => {
+          setUploadProgress(0);
+          setIsUploading((prev) => ({ ...prev, [index]: false }));
+          setUploadFailed(true);
+          setFiles((prev) =>
+            prev.map((file, i) => (i === index ? { ...file, error: "Upload failed" } : file))
+          );
+          console.error("File failed to upload:", fileData.file.name, error);
+          const uploadError = new Error("Upload failed");
+          uploadError.name = "UploadError";
+          onError?.(uploadError);
+        });
+    } else {
+      // Use built-in XHR upload
       fileUpload(fileData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   const handleAbortUpload = () => {
     if (xhrRef.current) {
@@ -162,33 +188,6 @@ const UploadItem: React.FC<UploadItemProps> = ({
   };
 
   if (fileData.removed) return null;
-
-  useEffect(() => {
-    if (fileUploadConfig?.handler && !xhrRef.current) {
-      setIsUploading((prev) => ({ ...prev, [index]: true }));
-
-      fileUploadConfig.handler(fileData)
-        .then((response) => {
-          setIsUploading((prev) => ({ ...prev, [index]: false }));
-          setIsUploaded(true);
-          onFileUploaded(response);
-        })
-        .catch((error) => {
-          setUploadProgress(0);
-          setIsUploading((prev) => ({ ...prev, [index]: false }));
-          setUploadFailed(true);
-          setFiles((prev) =>
-            prev.map((file, i) => (i === index ? { ...file, error: "Upload failed" } : file))
-          );
-          console.error("File failed to upload:", fileData.file.name, error);
-          const uploadError = new Error("Upload failed");
-          uploadError.name = "UploadError";
-          onError?.(uploadError);
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
 
   return (
     <li>
