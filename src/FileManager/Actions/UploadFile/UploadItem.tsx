@@ -23,6 +23,7 @@ interface FileUploadConfig {
   url?: string;
   headers?: Record<string, string>;
   method?: "POST" | "PUT";
+  handler?: (fileData: FileData) => Promise<any>;
 }
 
 interface UploadItemProps {
@@ -161,6 +162,33 @@ const UploadItem: React.FC<UploadItemProps> = ({
   };
 
   if (fileData.removed) return null;
+
+  useEffect(() => {
+    if (fileUploadConfig?.handler && !xhrRef.current) {
+      setIsUploading((prev) => ({ ...prev, [index]: true }));
+
+      fileUploadConfig.handler(fileData)
+        .then((response) => {
+          setIsUploading((prev) => ({ ...prev, [index]: false }));
+          setIsUploaded(true);
+          onFileUploaded(response);
+        })
+        .catch((error) => {
+          setUploadProgress(0);
+          setIsUploading((prev) => ({ ...prev, [index]: false }));
+          setUploadFailed(true);
+          setFiles((prev) =>
+            prev.map((file, i) => (i === index ? { ...file, error: "Upload failed" } : file))
+          );
+          console.error("File failed to upload:", fileData.file.name, error);
+          const uploadError = new Error("Upload failed");
+          uploadError.name = "UploadError";
+          onError?.(uploadError);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   return (
     <li>
