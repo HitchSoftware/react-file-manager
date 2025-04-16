@@ -22,7 +22,7 @@ interface FileData {
 }
 
 
-interface FileUploadConfig {
+export interface FileUploadConfig {
   url?: string;
   headers?: Record<string, string>;
   method?: "POST" | "PUT";

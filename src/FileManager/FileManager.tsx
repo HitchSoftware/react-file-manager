@@ -17,12 +17,8 @@ import BreadCrumb from "./BreadCrumb/BreadCrumb";
 import FileList from "./FileList/FileList";
 import Actions from "./Actions/Actions";
 import { FileEntity } from "../types/FileEntity";
+import { FileUploadConfig } from "./Actions/UploadFile/UploadItem";
 
-export interface FileUploadConfig {
-  url: string;
-  headers?: Record<string, string>;
-  method?: "POST" | "PUT";
-}
 
 export interface FileManagerProps {
   files: FileEntity[];

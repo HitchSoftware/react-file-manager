@@ -10,13 +10,8 @@ import DeleteAction from "./Delete/Delete.action";
 import PreviewFileAction from "./PreviewFile/PreviewFile.action";
 import { TriggerAction } from "../../types/TriggerAction";
 import { FileEntity } from "../../types/FileEntity";
+import { FileUploadConfig } from "./UploadFile/UploadItem";
 
-interface FileUploadConfig {
-  url?: string;
-  headers?: Record<string, string>;
-  method?: "POST" | "PUT";
-  handler?: (event: React.ChangeEvent<HTMLInputElement>, filePath: string) => Promise<void>;
-}
 
 interface ActionsProps {
   fileUploadConfig?: FileUploadConfig;
