@@ -58,30 +58,31 @@ const UploadFileAction: React.FC<UploadFileActionProps> = ({
   };
 
   const setSelectedFiles = (selectedFiles: File[]) => {
-    const mappedFiles = selectedFiles
-      .map(mapFileToEntity)
+    const newFiles = selectedFiles
       .filter(
-        (item) =>
-          !files.some((fileData) => fileData.file.name.toLowerCase() === item.name.toLowerCase())
-      );
-
-    if (mappedFiles.length > 0) {
-      const newFiles = mappedFiles.map((file) => {
-        const appendData = onFileUploading(file, currentFolder);
-        const error = checkFileError(file);
-        if (error) {
-          onError?.(new Error(error));
-        }
+        (nativeFile) =>
+          !files.some((fileData) => fileData.metadata.name.toLowerCase() === nativeFile.name.toLowerCase())
+      )
+      .map((nativeFile) => {
+        const metadata = mapFileToEntity(nativeFile); // still use this for UI
+        const error = checkFileError(metadata);
+        const appendData = onFileUploading(metadata, currentFolder);
+  
+        if (error) onError?.(new Error(error));
+  
         return {
-          file,
+          file: nativeFile,         // ✅ real native File
+          metadata,                 // ✅ preserve metadata separately
           appendData,
           ...(error && { error }),
         };
       });
-
+  
+    if (newFiles.length > 0) {
       setFiles((prev) => [...prev, ...newFiles]);
     }
   };
+  
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -163,7 +164,7 @@ const UploadFileAction: React.FC<UploadFileActionProps> = ({
                 setFiles={setFiles}
                 fileUploadConfig={fileUploadConfig}
                 setIsUploading={setIsUploading}
-                onFileUploaded={(response) => onFileUploaded(fileData.file, response)}
+                onFileUploaded={(response) => onFileUploaded(fileData.metadata, response)}
                 handleFileRemove={handleFileRemove}
               />
             ))}

@@ -11,13 +11,16 @@ import { getDataSize } from "../../../utils/getDataSize";
 import { IoMdRefresh } from "react-icons/io";
 import { useFiles } from "../../../contexts/FilesContext";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { FileEntity } from "../../../types/FileEntity";
 
 interface FileData {
-  file: File;
+  file: File; // ✅ the actual native File
+  metadata: FileEntity; // ✅ the metadata used for name/size display
   error?: boolean | string;
   removed?: boolean;
   appendData?: Record<string, any>;
 }
+
 
 interface FileUploadConfig {
   url?: string;
@@ -154,7 +157,7 @@ const UploadItem: React.FC<UploadItemProps> = ({
           setFiles((prev) =>
             prev.map((file, i) => (i === index ? { ...file, error: "Upload failed" } : file))
           );
-          console.error("File failed to upload:", fileData.file.name, error);
+          console.error("File failed to upload:", fileData.metadata.name, error);
           const uploadError = new Error("Upload failed");
           uploadError.name = "UploadError";
           onError?.(uploadError);
@@ -192,15 +195,15 @@ const UploadItem: React.FC<UploadItemProps> = ({
   return (
     <li>
       <div className="file-icon">
-        {fileIcons[getFileExtension(fileData.file?.name ?? "") || ""] ?? <FaRegFile size={33} />}
+        {fileIcons[getFileExtension(fileData.metadata?.name ?? "") || ""] ?? <FaRegFile size={33} />}
       </div>
       <div className="file">
         <div className="file-details">
           <div className="file-info">
-            <span className="file-name text-truncate" title={fileData.file?.name}>
+            <span className="file-name text-truncate" title={fileData.metadata?.name}>
               {fileData.file?.name}
             </span>
-            <span className="file-size">{getDataSize(fileData.file?.size ?? 0)}</span>
+            <span className="file-size">{getDataSize(fileData.metadata?.size ?? 0)}</span>
           </div>
           {isUploaded ? (
             <FaRegCheckCircle title="Uploaded" className="upload-success" />
